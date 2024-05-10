@@ -18,6 +18,7 @@ class TelaDesenho(Widget):
             self.bind(size=self.atualizar_fundo, pos=self.atualizar_fundo)
             self.modo = 'pincel'  # Modo inicial como pincel
             self.linha_cor = (0, 0, 0)  # Cor preta como padrão
+            self.linha_espessura = 4
 
             self.cor_fundo = (1, 1, 1, 1)  # Cor branca como padrão para o fundo
             self.borracha_tamanho = 20  # Tamanho da borracha
@@ -46,7 +47,7 @@ class TelaDesenho(Widget):
         else:
             with self.canvas:
                 Color(*self.linha_cor)
-                linha = Line(points=(touch.x, touch.y), width=2)
+                linha = Line(points=(touch.x, touch.y), width=self.linha_espessura)
                 touch.ud['linha'] = linha
                 
     def on_touch_move(self, touch):
@@ -102,8 +103,8 @@ class FerramentasPopup(Popup):
         box.add_widget(self.color_picker)
         self.color_picker.bind(color=self.on_color)
 
-        # Slider para espessura da linha
-        self.slider = Slider(min=1, max=10, value=1)
+        # Slider para espessura
+        self.slider = Slider(min=1, max=20, value=1)
         box.add_widget(self.slider)
         self.slider.bind(value=self.on_thickness)
 
@@ -114,6 +115,7 @@ class FerramentasPopup(Popup):
 
     def on_thickness(self, instance, value):
         self.tela_desenho.linha_espessura = value
+        self.tela_desenho.borracha_tamanho = value
 
 class DesenhoApp(App):
     def build(self):
